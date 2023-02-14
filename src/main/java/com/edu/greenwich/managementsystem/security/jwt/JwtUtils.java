@@ -1,5 +1,6 @@
 package com.edu.greenwich.managementsystem.security.jwt;
 
+import com.edu.greenwich.managementsystem.service.jwt.UserDetailsImpl;
 import io.jsonwebtoken.*;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
@@ -9,6 +10,8 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 import org.springframework.web.util.WebUtils;
+
+import java.util.Date;
 
 @Component
 public class JwtUtils {
