@@ -1,5 +1,6 @@
 package com.edu.greenwich.managementsystem.security.jwt;
 
+import com.edu.greenwich.managementsystem.service.jwt.UserDetailsServiceImpl;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
