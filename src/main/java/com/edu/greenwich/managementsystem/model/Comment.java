@@ -4,7 +4,7 @@ import javax.persistence.*;
 import java.util.Date;
 
 @Entity
-@Table(name = "Comment")
+@Table(name = "comment")
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -15,6 +15,8 @@ public class Comment {
     private Date createdDate;
 
     private String createdBy;
+
+    private long ideaId;
 
     public Integer getId() {
         return id;
@@ -48,17 +50,14 @@ public class Comment {
         this.createdBy = createdBy;
     }
 
-    public Idea getIdea() {
-        return idea;
-    }
-
-    public void setIdea(Idea idea) {
-        this.idea = idea;
-    }
-
-    @ManyToOne
-    @JoinColumn(name = "idea_id")
-    private Idea idea;
     public Comment() {
+    }
+
+    public long getIdeaId() {
+        return ideaId;
+    }
+
+    public void setIdeaId(long ideaId) {
+        this.ideaId = ideaId;
     }
 }

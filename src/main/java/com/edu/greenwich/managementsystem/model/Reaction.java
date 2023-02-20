@@ -9,31 +9,29 @@ public class Reaction {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")
-    private User user;
-
-    @ManyToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "idea_id")
-    private Idea idea;
-
     private boolean isLike;
 
-    public User getUser() {
-        return user;
+    private String ideaId;
+
+    private String userId;
+
+
+    public String getIdeaId() {
+        return ideaId;
     }
 
-    public void setUser(User user) {
-        this.user = user;
+    public void setIdeaId(String ideaId) {
+        this.ideaId = ideaId;
     }
 
-    public Idea getIdea() {
-        return idea;
+    public String getUserId() {
+        return userId;
     }
 
-    public void setIdea(Idea idea) {
-        this.idea = idea;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
+
 
     public boolean isLike() {
         return isLike;

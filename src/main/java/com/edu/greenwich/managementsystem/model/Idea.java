@@ -6,47 +6,23 @@ import java.util.List;
 @Entity
 @Table(name = "Idea")
 public class Idea {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idea_id")
-    private Integer id;
 
-    @Column(length = 60)
     private String brief;
-
-    @Column(length = 500)
     private String content;
 
     private String author;
 
     private String fileLocation;
 
-    private String tag;
+    private long topicId;
 
-    @OneToMany(mappedBy = "idea")
-    private List<Reaction> reactions;
-
-    @OneToMany(mappedBy = "idea")
-    private List<Comment> comments;
+    private long categoryId;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idea_id")
+    private Long id;
 
     public Idea() {
-
-    }
-
-    public Integer getId() {
-        return id;
-    }
-
-    public void setId(Integer id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return brief;
-    }
-
-    public void setName(String brief) {
-        this.brief = brief;
     }
 
     public String getContent() {
@@ -73,27 +49,35 @@ public class Idea {
         this.fileLocation = fileLocation;
     }
 
-    public String getTag() {
-        return tag;
+    public long getTopicId() {
+        return topicId;
     }
 
-    public void setTag(String tag) {
-        this.tag = tag;
+    public void setTopicId(long topicId) {
+        this.topicId = topicId;
     }
 
-    public List<Reaction> getReactions() {
-        return reactions;
+    public long getCategoryId() {
+        return categoryId;
     }
 
-    public void setReactions(List<Reaction> reactions) {
-        this.reactions = reactions;
+    public void setCategoryId(long categoryId) {
+        this.categoryId = categoryId;
     }
 
-    public List<Comment> getComments() {
-        return comments;
+    public void setId(Long id) {
+        this.id = id;
     }
 
-    public void setComments(List<Comment> comments) {
-        this.comments = comments;
+    public Long getId() {
+        return id;
+    }
+
+    public String getBrief() {
+        return brief;
+    }
+
+    public void setBrief(String brief) {
+        this.brief = brief;
     }
 }

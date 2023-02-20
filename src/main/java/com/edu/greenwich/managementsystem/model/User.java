@@ -16,7 +16,7 @@ import java.util.Set;
 public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "user")
+    @Column(name = "user_id")
     private Long id;
 
     @NotBlank
@@ -37,9 +37,14 @@ public class User {
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>();
+//
+//    @OneToMany(mappedBy = "user")
+//    private List<Reaction> reaction;
 
-    @OneToMany(mappedBy = "user")
-    private List<Reaction> reaction;
+    @ManyToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "department_id", nullable = false)
+    private Department departments;
+
     public User() {
     }
 
@@ -88,4 +93,20 @@ public class User {
     public void setRoles(Set<Role> roles) {
         this.roles = roles;
     }
+
+    public Department getDepartments() {
+        return departments;
+    }
+
+    public void setDepartments(Department departments) {
+        this.departments = departments;
+    }
+
+//    public List<Reaction> getReaction() {
+//        return reaction;
+//    }
+//
+//    public void setReaction(List<Reaction> reaction) {
+//        this.reaction = reaction;
+//    }
 }
