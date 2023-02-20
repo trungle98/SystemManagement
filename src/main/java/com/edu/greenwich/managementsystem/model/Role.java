@@ -1,6 +1,7 @@
 package com.edu.greenwich.managementsystem.model;
 
-import jakarta.persistence.*;
+
+import javax.persistence.*;
 
 @Entity
 @Table(name = "roles")
