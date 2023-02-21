@@ -1,13 +1,13 @@
 package com.edu.greenwich.managementsystem.dto.response;
 
 public class ResponseMessage {
-    private String message;
+    private Object message;
 
-    public ResponseMessage(String message) {
+    public ResponseMessage(Object message) {
         this.message = message;
     }
 
-    public String getMessage() {
+    public Object getMessage() {
         return message;
     }
 
