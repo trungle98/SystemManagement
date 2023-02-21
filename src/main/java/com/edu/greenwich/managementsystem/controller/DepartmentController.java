@@ -21,7 +21,8 @@ public class DepartmentController{
         return departmentRepository.findAll();
     }
 
-    public Optional<Object> findById(int id) {
+    @GetMapping("/get")
+    public Optional<Object> findById(@RequestParam int id) {
         return Optional.empty();
     }
 
@@ -30,7 +31,8 @@ public class DepartmentController{
         return departmentRepository.save(department);
     }
 
-    public Optional<Object> delete(int id) {
-        return Optional.empty();
+    @GetMapping("/delete")
+    public void delete(@RequestParam long id) {
+        departmentRepository.deleteById(id);
     }
 }

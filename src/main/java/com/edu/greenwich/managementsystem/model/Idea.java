@@ -1,11 +1,17 @@
 package com.edu.greenwich.managementsystem.model;
 
+import lombok.Builder;
+
 import javax.persistence.*;
-import java.util.List;
 
 @Entity
 @Table(name = "Idea")
+@Builder
 public class Idea {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "idea_id")
+    private Long id;
 
     private String brief;
     private String content;
@@ -17,12 +23,19 @@ public class Idea {
     private long topicId;
 
     private long categoryId;
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "idea_id")
-    private Long id;
 
     public Idea() {
+
+    }
+
+    public Idea(Long id, String brief, String content, String author, String fileLocation, long topicId, long categoryId) {
+        this.id = id;
+        this.brief = brief;
+        this.content = content;
+        this.author = author;
+        this.fileLocation = fileLocation;
+        this.topicId = topicId;
+        this.categoryId = categoryId;
     }
 
     public String getContent() {
