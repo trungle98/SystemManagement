@@ -3,6 +3,7 @@ package com.edu.greenwich.managementsystem.controller;
 import com.edu.greenwich.managementsystem.Repository.CategoryRepository;
 import com.edu.greenwich.managementsystem.model.Category;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:8002", maxAge = 3600, allowCredentials="true")
 @RestController
 @RequestMapping("/api/category")
+@PreAuthorize("hasRole('ADMIN')  or hasRole('manager')")
 public class CategoryController {
     @Autowired
     CategoryRepository categoryRepository;
@@ -20,8 +22,8 @@ public class CategoryController {
         return categoryRepository.findAll();
     }
 
-    @GetMapping("/get")
-    public Optional<Category> findById(@RequestParam long id) {
+    @GetMapping("/get/")
+    public Optional<Category> findById(@RequestParam int id) {
         return categoryRepository.findById(id);
     }
 
@@ -30,8 +32,8 @@ public class CategoryController {
         return categoryRepository.save(category);
     }
 
-    @GetMapping("/delete")
-    public void delete(@RequestParam long id) {
+    @DeleteMapping("/delete")
+    public void delete(@RequestParam int id) {
         categoryRepository.deleteById(id);
     }
 }

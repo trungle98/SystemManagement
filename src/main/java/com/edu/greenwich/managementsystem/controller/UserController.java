@@ -3,6 +3,7 @@ package com.edu.greenwich.managementsystem.controller;
 import com.edu.greenwich.managementsystem.Repository.UserRepository;
 import com.edu.greenwich.managementsystem.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:8002", maxAge = 3600, allowCredentials="true")
 @RestController
 @RequestMapping("/api/user")
+@PreAuthorize("hasRole('ADMIN')  or hasRole('manager')")
 public class UserController {
 
     @Autowired

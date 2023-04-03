@@ -1,6 +1,5 @@
 package com.edu.greenwich.managementsystem.service;
 
-import com.edu.greenwich.managementsystem.ManagementSystemApplication;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.core.io.Resource;
@@ -8,7 +7,6 @@ import org.springframework.core.io.UrlResource;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.FilenameFilter;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.nio.file.FileAlreadyExistsException;
@@ -53,6 +51,7 @@ public class StorageServceImpl implements StorageService{
     @Override
     public Resource load(String filename) {
         try {
+            filename = filename.replaceFirst("uploads/", "");
             Path file = root.resolve(filename);
             Resource resource = new UrlResource(file.toUri());
 

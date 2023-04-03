@@ -28,7 +28,7 @@ public class CommentController {
     }
 
     @GetMapping("/delete")
-    public void delete(@RequestParam long id) {
+    public void delete(@RequestParam int id) {
         commentRepository.deleteById(id);
     }
 }

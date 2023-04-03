@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @Data
 public class IdeaRequest {
     @Nullable
-    private Long id;
+    private int id;
 
     private String brief;
 
