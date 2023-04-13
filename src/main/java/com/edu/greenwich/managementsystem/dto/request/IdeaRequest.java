@@ -22,10 +22,13 @@ public class IdeaRequest {
 
     private String author;
 
+
+    @Nullable
     private MultipartFile file;
+    @Nullable
+    private int topicId;
 
-    private long topicId;
-
+    @Nullable
     private long categoryId;
 
 }

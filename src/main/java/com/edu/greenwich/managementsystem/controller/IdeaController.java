@@ -74,15 +74,17 @@ public class IdeaController {
         logger.info("receive save request");
         //check if submission is meet closure date
         if (!checkMeetClosureDateByTopicId(topicId)) {
-            return ResponseEntity.status(HttpStatus.ACCEPTED).contentType(MediaType.APPLICATION_JSON).body(new ResponseMessage("Topic is expired"));
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage("Topic is expired"));
         }
         String fileName ="";
         Idea savedIdea;
         try {
             Idea idea = Idea.builder().brief(ideaRequest.getBrief()).categoryId(ideaRequest.getCategoryId())
                     .topicId(ideaRequest.getTopicId()).content(ideaRequest.getContent()).author(ideaRequest.getAuthor()).id(ideaRequest.getId()).build();
-            MultipartFile file = ideaRequest.getFile();
-            fileName = storageService.save(file);
+            if(!ideaRequest.getFile().isEmpty()){
+                MultipartFile file = ideaRequest.getFile();
+                fileName = storageService.save(file);
+            }
             idea.setFileLocation(fileName);
             savedIdea = ideaRepository.save(idea);
         }catch (Exception e){
@@ -116,7 +118,7 @@ public class IdeaController {
         boolean isMeet = false;
         //get topic by id
         Topic topic = topicRepository.getById(topicId);
-        Date closureDate = topic.getFinalClosure();
+        Date closureDate = topic.getClosure();
         Date now = new Date();
         if(closureDate.after(now)){
             return true;

@@ -35,7 +35,7 @@ public class CustomIdeaRepoImpl implements ReactionRepository{
 
     @Override
     public List<ReactionWithIdeaIdResponse> getReactionByTopicId(int topicId) {
-        Query query = entityManager.createNativeQuery("select i.*, sum(case r.is_like when true then 1 else 0 end) as total_like, sum(case r.is_like when false then 1 else 0 end) as total_dislike from reaction r join idea i on r.idea_id = i.idea_id where r.idea_id in (select idea_id from idea where topic_id = ?) group by r.idea_id");
+        Query query = entityManager.createNativeQuery("select i.*, sum(case r.is_like when true then 1 else 0 end) as total_like, sum(case r.is_like when false then 1 else 0 end) as total_dislike from reaction r right join idea i on r.idea_id = i.idea_id where i.idea_id in (select idea_id from idea where topic_id = ?) group by i.idea_id");
         query.setParameter(1, topicId);
         List<Object[]> rows = query.getResultList();
         List<ReactionWithIdeaIdResponse> result = new ArrayList<>(rows.size());

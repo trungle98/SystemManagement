@@ -7,7 +7,7 @@ import java.util.List;
 
 public interface ReactionRepository{
 
-    void saveReaction(@Param(value = "isLike") boolean isLike, @Param(value = "ideaId")  String ideaId, @Param(value = "userId")  String userId);
+    void saveReaction(boolean isLike, String ideaId, String userId);
 
     List<ReactionWithIdeaIdResponse> getReactionByTopicId(int topicId);
 }
