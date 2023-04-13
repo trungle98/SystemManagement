@@ -2,12 +2,14 @@ package com.edu.greenwich.managementsystem.controller;
 
 import com.edu.greenwich.managementsystem.Repository.CommentRepository;
 import com.edu.greenwich.managementsystem.Repository.IdeaRepository;
+import com.edu.greenwich.managementsystem.Repository.TopicRepository;
+import com.edu.greenwich.managementsystem.Repository.impl.CustomIdeaRepoImpl;
 import com.edu.greenwich.managementsystem.dto.request.IdeaRequest;
-import com.edu.greenwich.managementsystem.dto.response.IdeaResponse;
+import com.edu.greenwich.managementsystem.dto.response.ReactionWithIdeaIdResponse;
 import com.edu.greenwich.managementsystem.dto.response.ResponseMessage;
 import com.edu.greenwich.managementsystem.model.Comment;
 import com.edu.greenwich.managementsystem.model.Idea;
-import com.edu.greenwich.managementsystem.service.StorageServceImpl;
+import com.edu.greenwich.managementsystem.model.Topic;
 import com.edu.greenwich.managementsystem.service.StorageService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,10 +20,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
@@ -36,7 +37,13 @@ public class IdeaController {
     CommentRepository commentRepository;
 
     @Autowired
+    private CustomIdeaRepoImpl customIdeaRepo;
+
+    @Autowired
     StorageService storageService;
+
+    @Autowired
+    TopicRepository topicRepository;
 
     @GetMapping("/all")
     public List<Idea> getAll() {
@@ -44,21 +51,40 @@ public class IdeaController {
     }
 
     @GetMapping("/get")
-    public Optional<Idea> findById(@RequestParam long id) {
-        return ideaRepository.findById(id);
+    public Optional<Idea> findById(@RequestParam int id) {
+        Optional<Idea>  idea = ideaRepository.findById(id);
+        if (idea.isPresent()) {
+            int views = idea.get().getViews();
+            views += 1;
+            idea.get().setViews(views);
+            ideaRepository.save(idea.get());
+        }
+        return idea;
     }
 
+    @GetMapping("/getByTopicId")
+    public Optional<List<ReactionWithIdeaIdResponse>> findByTopicId(@RequestParam int topicId) {
+        return Optional.ofNullable(customIdeaRepo.getReactionByTopicId(topicId));
+    }
+    /*
+     * need to check if the topic is closure
+     */
     @PostMapping("/save")
-    public ResponseEntity<ResponseMessage> save(@ModelAttribute IdeaRequest ideaRequest) {
-        ServletRequestAttributes attr = (ServletRequestAttributes) RequestContextHolder.currentRequestAttributes();
+    public ResponseEntity<ResponseMessage> save(@ModelAttribute IdeaRequest ideaRequest, @RequestParam int topicId) {
         logger.info("receive save request");
+        //check if submission is meet closure date
+        if (!checkMeetClosureDateByTopicId(topicId)) {
+            return ResponseEntity.status(HttpStatus.EXPECTATION_FAILED).body(new ResponseMessage("Topic is expired"));
+        }
         String fileName ="";
         Idea savedIdea;
         try {
             Idea idea = Idea.builder().brief(ideaRequest.getBrief()).categoryId(ideaRequest.getCategoryId())
                     .topicId(ideaRequest.getTopicId()).content(ideaRequest.getContent()).author(ideaRequest.getAuthor()).id(ideaRequest.getId()).build();
-            MultipartFile file = ideaRequest.getFile();
-            fileName = storageService.save(file);
+            if(!ideaRequest.getFile().isEmpty()){
+                MultipartFile file = ideaRequest.getFile();
+                fileName = storageService.save(file);
+            }
             idea.setFileLocation(fileName);
             savedIdea = ideaRepository.save(idea);
         }catch (Exception e){
@@ -69,8 +95,9 @@ public class IdeaController {
         return ResponseEntity.status(HttpStatus.ACCEPTED).contentType(MediaType.APPLICATION_JSON).body(new ResponseMessage(savedIdea));
     }
 
-    @GetMapping("/delete")
-    public void delete(@RequestParam long id) {
+
+    @DeleteMapping("/delete")
+    public void delete(@RequestParam int id) {
         ideaRepository.deleteById(id);
     }
 
@@ -79,11 +106,23 @@ public class IdeaController {
         return commentRepository.findAllByIdeaId(ideaId);
     }
 
-    @GetMapping("/files/{filename:.+}")
+    @GetMapping("/files")
     @ResponseBody
-    public ResponseEntity<Resource> getFile(@PathVariable String filename) {
+    public ResponseEntity<Resource> getFile(@RequestParam String filename) {
         Resource file = storageService.load(filename);
         return ResponseEntity.ok()
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + file.getFilename() + "\"").body(file);
+    }
+
+    private boolean checkMeetClosureDateByTopicId(int topicId) {
+        boolean isMeet = false;
+        //get topic by id
+        Topic topic = topicRepository.getById(topicId);
+        Date closureDate = topic.getClosure();
+        Date now = new Date();
+        if(closureDate.after(now)){
+            return true;
+        }
+        return isMeet;
     }
 }

@@ -1,11 +1,17 @@
 package com.edu.greenwich.managementsystem.model;
 
+import lombok.Builder;
+import lombok.Data;
+import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.lang.Nullable;
+
 import javax.persistence.*;
 import java.util.Date;
 import java.util.List;
 
 @Entity
 @Table(name = "Topic")
+@Data
 public class Topic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -14,9 +20,15 @@ public class Topic {
 
     private String name;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date closure;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date finalClosure;
+
+    @Nullable
+    private int authorId;
+
     public Integer getId() {
         return id;
     }

@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface CommentRepository extends JpaRepository<Comment, Long> {
+public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
     @Query(value = "select * from comment c where c.idea_id = ?1", nativeQuery = true)
     List<Comment> findAllByIdeaId(long ideaId);

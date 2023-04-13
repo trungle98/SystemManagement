@@ -1,10 +1,13 @@
 package com.edu.greenwich.managementsystem.model;
 
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.List;
 
 
 @Entity
+@Data
 @Table(name = "Category")
 public class Category {
     @Id
@@ -16,4 +19,5 @@ public class Category {
     public void Category(){
 
     }
+
 }

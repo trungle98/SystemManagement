@@ -14,7 +14,7 @@ import javax.persistence.Id;
 @Data
 public class IdeaRequest {
     @Nullable
-    private Long id;
+    private int id;
 
     private String brief;
 
@@ -22,10 +22,13 @@ public class IdeaRequest {
 
     private String author;
 
+
+    @Nullable
     private MultipartFile file;
+    @Nullable
+    private int topicId;
 
-    private long topicId;
-
+    @Nullable
     private long categoryId;
 
 }

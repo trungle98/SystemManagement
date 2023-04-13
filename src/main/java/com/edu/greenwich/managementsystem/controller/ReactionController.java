@@ -1,9 +1,12 @@
 package com.edu.greenwich.managementsystem.controller;
 
 import com.edu.greenwich.managementsystem.Repository.ReactionRepository;
+import com.edu.greenwich.managementsystem.dto.response.ReactionWithIdeaIdResponse;
 import com.edu.greenwich.managementsystem.model.Reaction;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @CrossOrigin(origins = "http://localhost:8002", maxAge = 3600, allowCredentials="true")
 @RestController
@@ -18,6 +21,11 @@ public class ReactionController {
         String ideaId = reaction.getIdeaId();
         String userId = reaction.getUserId();
         reactionRepository.saveReaction(isLike, ideaId, userId);
+    }
+
+    @GetMapping("/getByTopicId")
+    public List<ReactionWithIdeaIdResponse> getReactionByTopicId(@RequestParam int topicId) {
+       return reactionRepository.getReactionByTopicId(topicId);
     }
 
 }
