@@ -1,10 +1,14 @@
 package com.edu.greenwich.managementsystem.model;
 
+import lombok.Builder;
+import lombok.Data;
+
 import javax.persistence.*;
 import java.util.Date;
 
 @Entity
 @Table(name = "comment")
+@Data
 public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,6 +21,8 @@ public class Comment {
     private String createdBy;
 
     private long ideaId;
+
+    private String bullying;
 
     public Integer getId() {
         return id;

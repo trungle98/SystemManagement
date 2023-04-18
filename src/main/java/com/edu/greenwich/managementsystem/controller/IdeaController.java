@@ -10,18 +10,25 @@ import com.edu.greenwich.managementsystem.dto.response.ResponseMessage;
 import com.edu.greenwich.managementsystem.model.Comment;
 import com.edu.greenwich.managementsystem.model.Idea;
 import com.edu.greenwich.managementsystem.model.Topic;
+import com.edu.greenwich.managementsystem.service.ExcelExporterService;
 import com.edu.greenwich.managementsystem.service.StorageService;
+import com.edu.greenwich.managementsystem.service.impl.DetectorService;
+import org.apache.poi.util.IOUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.ByteArrayResource;
 import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.ByteArrayInputStream;
+import java.io.IOException;
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +36,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:8002", maxAge = 3600, allowCredentials="true")
 @RestController
 @RequestMapping("/api/idea")
+@PreAuthorize("hasRole('ROLE_STAFF') or hasRole('ROLE_DEPT') or hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
 public class IdeaController {
     private static Logger logger = LoggerFactory.getLogger(IdeaController.class);
     @Autowired
@@ -44,6 +52,10 @@ public class IdeaController {
 
     @Autowired
     TopicRepository topicRepository;
+
+    @Autowired
+    ExcelExporterService excelExporterService;
+
 
     @GetMapping("/all")
     public List<Idea> getAll() {
@@ -86,6 +98,7 @@ public class IdeaController {
                 fileName = storageService.save(file);
             }
             idea.setFileLocation(fileName);
+
             savedIdea = ideaRepository.save(idea);
         }catch (Exception e){
             logger.error("save error caused ={}",e);
@@ -124,5 +137,19 @@ public class IdeaController {
             return true;
         }
         return isMeet;
+    }
+    @GetMapping("/exportExcel")
+    public ResponseEntity<ByteArrayResource> exportToExcelByTopicId(@RequestParam int topicId) throws IOException {
+        Optional<List<ReactionWithIdeaIdResponse>> ideas = Optional.ofNullable(customIdeaRepo.getReactionByTopicId(topicId));
+        if (ideas.isPresent()){
+            ByteArrayInputStream inputStream = excelExporterService.export(ideas.get());
+            ByteArrayResource resource = new ByteArrayResource(IOUtils.toByteArray(inputStream));
+            return ResponseEntity.ok()
+                    .header(HttpHeaders.CONTENT_DISPOSITION, "attachment;filename="+topicId+".xlsx")
+                    .contentType(MediaType.parseMediaType("application/vnd.ms-excel"))
+                    .contentLength(resource.contentLength())
+                    .body(resource);
+        }
+        return null;
     }
 }

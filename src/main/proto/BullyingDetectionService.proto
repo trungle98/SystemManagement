@@ -1,0 +1,17 @@
+syntax = "proto3";
+option java_multiple_files = true;
+package com.edu.greenwich.managementsystem.grpc;
+
+//define message structure
+message MsgRequest {
+  string message = 1;
+}
+
+//response
+message MsgResponse {
+  string response = 1;
+}
+
+service BullyingDetectionService {
+  rpc detectComment(MsgRequest) returns (MsgResponse);
+}
