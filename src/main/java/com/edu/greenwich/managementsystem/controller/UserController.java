@@ -12,12 +12,13 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:8002", maxAge = 3600, allowCredentials="true")
 @RestController
 @RequestMapping("/api/user")
-@PreAuthorize("hasRole('ADMIN')  or hasRole('manager')")
+
 public class UserController {
 
     @Autowired
     UserRepository userRepository;
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')  or hasRole('ROLE_MANAGER')")
     @GetMapping("/all")
     public List<User> getAll() {
         return userRepository.findAll();
@@ -28,11 +29,13 @@ public class UserController {
         return userRepository.findById(id);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')  or hasRole('ROLE_MANAGER')")
     @PostMapping("/save")
     public User save(@RequestBody User user) {
         return userRepository.save(user);
     }
 
+    @PreAuthorize("hasRole('ROLE_ADMIN')  or hasRole('ROLE_MANAGER')")
     @GetMapping("/delete")
     public void delete(@RequestParam long id) {
         userRepository.deleteById(id);

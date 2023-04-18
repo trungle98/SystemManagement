@@ -11,6 +11,6 @@ import java.util.Optional;
 @Repository
 public interface CommentRepository extends JpaRepository<Comment, Integer> {
 
-    @Query(value = "select * from comment c where c.idea_id = ?1", nativeQuery = true)
+    @Query(value = "select * from comment c where c.idea_id = ?1 and c.bullying = 'not_cyberbullying'", nativeQuery = true)
     List<Comment> findAllByIdeaId(long ideaId);
 }

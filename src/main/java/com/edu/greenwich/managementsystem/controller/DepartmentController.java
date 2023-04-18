@@ -12,7 +12,7 @@ import java.util.Optional;
 @CrossOrigin(origins = "http://localhost:8002", maxAge = 3600, allowCredentials="true")
 @RestController
 @RequestMapping("/api/dept")
-@PreAuthorize("hasRole('ADMIN')  or hasRole('manager')")
+@PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MANAGER')")
 public class DepartmentController{
 
     @Autowired
