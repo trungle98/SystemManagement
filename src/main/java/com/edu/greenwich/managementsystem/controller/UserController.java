@@ -24,8 +24,8 @@ public class UserController {
         return userRepository.findAll();
     }
 
-    @GetMapping("/get")
-    public Optional<User> findById(@RequestParam long id) {
+    @GetMapping("/{id}")
+    public Optional<User> findById(@PathVariable long id) {
         return userRepository.findById(id);
     }
 
@@ -36,8 +36,20 @@ public class UserController {
     }
 
     @PreAuthorize("hasRole('ROLE_ADMIN')  or hasRole('ROLE_MANAGER')")
-    @GetMapping("/delete")
-    public void delete(@RequestParam long id) {
+    @PutMapping ("/{id}")
+    public User update(@RequestBody User user, @PathVariable long id) {
+        Optional<User> u = userRepository.findByUserId(id);
+        if (u.isPresent()){
+            u.get().setEmail(user.getEmail());
+            u.get().setPassword(user.getPassword());
+            u.get().setDepartments(user.getDepartments());
+        }
+        return userRepository.save(user);
+    }
+
+    @PreAuthorize("hasRole('ROLE_ADMIN')  or hasRole('ROLE_MANAGER')")
+    @DeleteMapping("/")
+    public void delete(@PathVariable long id) {
         userRepository.deleteById(id);
     }
 }
