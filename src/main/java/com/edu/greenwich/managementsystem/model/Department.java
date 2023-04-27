@@ -12,10 +12,23 @@ public class Department {
     private Integer id;
 
     private String name;
-//    @OneToMany(mappedBy = "departments")
+
+    public Department(int i) {
+        this.id = id;
+
+    }
+
+    public Department() {
+
+    }
+
+    //    @OneToMany(mappedBy = "departments")
 //    private List<User> users;
     public void Department(){
 
+    }
+    public void Department(Integer id){
+        this.id = id;
     }
 
 //    public List<User> getUsers() {

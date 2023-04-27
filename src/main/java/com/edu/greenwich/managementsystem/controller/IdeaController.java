@@ -95,7 +95,7 @@ public class IdeaController {
                     .topicId(ideaRequest.getTopicId()).content(ideaRequest.getContent()).author(ideaRequest.getAuthor()).id(ideaRequest.getId()).build();
             if(!ideaRequest.getFile().isEmpty()){
                 MultipartFile file = ideaRequest.getFile();
-                fileName = storageService.save(file);
+                fileName = storageService.save(file, ideaRequest.getTopicId());
             }
             idea.setFileLocation(fileName);
 
